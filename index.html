@@ -3,338 +3,404 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Bistro Express — Menu & Online Ordering</title>
+  <title>Olive & Ember — Order Online</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Small utility to smoothly animate the checkout drawer */
+    .drawer-enter { transform: translateY(20px); opacity: 0; }
+    .drawer-enter-active { transform: translateY(0); opacity: 1; transition: all 200ms ease; }
+    .drawer-exit { transform: translateY(0); opacity: 1; }
+    .drawer-exit-active { transform: translateY(20px); opacity: 0; transition: all 180ms ease; }
+  </style>
 </head>
-<body class="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-  <section class="w-full max-w-4xl bg-white rounded-2xl shadow-lg overflow-hidden ring-1 ring-gray-200">
-    <!-- Header / Hero -->
-    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-400 to-red-500 flex items-center justify-center text-white font-bold text-lg">
-          BE
-        </div>
-        <div>
-          <h1 class="text-lg font-semibold text-gray-800">Bistro Express</h1>
-          <p class="text-sm text-gray-500">Fresh. Fast. Delivered.</p>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-4">
-        <button id="view-menu" class="hidden md:inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-md text-sm">
-          Order Now
-        </button>
-
-        <button id="cart-toggle" class="relative inline-flex items-center p-2 rounded-md hover:bg-gray-50">
-          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 7h14l-2-7M10 21a1 1 0 100-2 1 1 0 000 2zm6 0a1 1 0 100-2 1 1 0 000 2z" />
-          </svg>
-          <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">0</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Single Landing Preview Section Content -->
-    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Left: Hero & CTA -->
-      <div class="flex flex-col justify-between gap-6">
-        <div>
-          <h2 class="text-2xl font-extrabold text-gray-900">Taste the city’s favorite flavors</h2>
-          <p class="mt-3 text-gray-600">Curated, chef-inspired dishes made with locally sourced ingredients. Order online for pickup or delivery.</p>
+<body class="bg-gray-50 font-sans text-gray-800">
+  <section class="max-w-4xl mx-auto my-14 bg-white rounded-2xl shadow-lg overflow-hidden ring-1 ring-gray-100">
+    <div class="md:flex">
+      <!-- Left: Hero / Branding -->
+      <div class="md:w-1/2 p-6 md:p-8 bg-gradient-to-br from-amber-50 to-white">
+        <div class="flex items-start justify-between">
+          <div>
+            <h1 class="text-2xl font-extrabold text-amber-700">Olive & Ember</h1>
+            <p class="mt-1 text-sm text-gray-600">Contemporary Mediterranean • Fresh, seasonal ingredients</p>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M9.049 2.927C9.469 1.63 11.531 1.63 11.951 2.927l.715 2.21a1 1 0 00.95.69h2.333c1.29 0 1.827 1.653.787 2.373l-1.892 1.36a1 1 0 00-.364 1.118l.725 2.16c.42 1.297-.955 2.37-1.96 1.59L10 12.347l-1.245.98c-1.005.78-2.38-.293-1.96-1.59l.725-2.16a1 1 0 00-.364-1.118L5.27 8.2C4.23 7.48 4.77 5.827 6.06 5.827h2.333a1 1 0 00.95-.69l.705-2.21z"/></svg>
+                Top rated
+              </span>
+              <span class="text-sm text-gray-500">Open · Delivery • Pickup</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-xl font-semibold text-gray-900">$ • $$$</span>
+            <p class="text-xs text-gray-500">Est. delivery 25–35 min</p>
+          </div>
         </div>
 
-        <div class="mt-2 flex gap-3">
-          <button id="cta-order" class="px-5 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-lg shadow-sm text-sm font-medium">Start Your Order</button>
-          <a href="#" class="px-5 py-3 border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50">View Full Menu</a>
+        <div class="mt-6 grid grid-cols-2 gap-3">
+          <img src="https://images.unsplash.com/photo-1604908177522-0da5c2b4d6b8?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=6f1f3b3a39bd69b0a4a2b81611ae3d86" alt="Grilled Dish" class="rounded-lg object-cover w-full h-28">
+          <img src="https://images.unsplash.com/photo-1542435503-956c469947f6?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=ea1a5350a39cd6a8f7e06d0a0f9e4d0b" alt="Salad" class="rounded-lg object-cover w-full h-28">
         </div>
 
-        <div class="mt-4 text-sm text-gray-500">
-          <p><strong>Delivery:</strong> 30-40 min • <strong>Minimum:</strong> $12 • <strong>Contact-free delivery available</strong></p>
+        <p class="mt-6 text-sm text-gray-600">Seasonal menu crafted with sustainably sourced produce. Order for delivery or pickup — fast, fresh, and perfectly plated.</p>
+
+        <div class="mt-6 flex items-center gap-3">
+          <button id="orderNowBtn" class="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm shadow">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Order Now
+          </button>
+          <a href="#" class="px-3 py-2 text-sm text-amber-600 hover:underline">View Full Menu</a>
         </div>
       </div>
 
-      <!-- Right: Menu Preview with ordering -->
-      <div class="bg-gray-50 p-4 rounded-lg">
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">Chef's Picks</h3>
+      <!-- Right: Menu & Cart -->
+      <div class="md:w-1/2 p-6 md:p-8">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold">Featured Dishes</h2>
+          <div class="text-sm text-gray-500">Tap to add • Customize at checkout</div>
+        </div>
 
-        <ul id="menu-list" class="space-y-4">
-          <!-- Menu items will be rendered by JS; include static template fallback -->
-          <li class="flex items-center gap-4">
-            <div class="w-20 h-14 rounded-md bg-gradient-to-br from-green-300 to-green-500 flex items-center justify-center text-white font-semibold">Salad</div>
-            <div class="flex-1">
-              <div class="flex items-baseline justify-between">
-                <h4 class="text-sm font-semibold text-gray-800">Harvest Kale Salad</h4>
-                <span class="text-sm font-medium text-gray-700">$9.50</span>
+        <ul id="menuList" class="mt-4 space-y-3">
+          <!-- Items will be inserted by JS template below -->
+          <li class="flex items-start justify-between bg-gray-50 rounded-xl p-3">
+            <div class="flex items-start gap-3">
+              <img src="https://images.unsplash.com/photo-1605475126882-8d1f32a7bcb4?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=bcf1d2ab1c5f2b7a2d8f2d8e3a0a7c2a" alt="Lamb Skewers" class="w-16 h-16 rounded-lg object-cover">
+              <div>
+                <h3 class="text-sm font-medium">Charred Lamb Skewers</h3>
+                <p class="text-xs text-gray-500 mt-1">Herb marinade, lemon yogurt</p>
               </div>
-              <p class="text-xs text-gray-500">Kale, roasted pumpkin, feta, lemon vinaigrette.</p>
-              <div class="mt-3 flex items-center gap-2">
-                <button data-id="salad" class="add-btn px-3 py-1 bg-white border border-gray-200 rounded-md text-sm hover:bg-gray-50">Add</button>
-                <button data-id="salad" class="quick-note text-xs text-gray-500 hover:underline">Notes</button>
-              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-semibold">$18</div>
+              <button class="mt-3 add-btn inline-flex items-center px-3 py-1 bg-amber-50 text-amber-700 rounded-md text-xs" data-id="1" data-name="Charred Lamb Skewers" data-price="18">Add</button>
             </div>
           </li>
 
-          <li class="flex items-center gap-4">
-            <div class="w-20 h-14 rounded-md bg-gradient-to-br from-red-300 to-red-500 flex items-center justify-center text-white font-semibold">Pizza</div>
-            <div class="flex-1">
-              <div class="flex items-baseline justify-between">
-                <h4 class="text-sm font-semibold text-gray-800">Margherita Pizza</h4>
-                <span class="text-sm font-medium text-gray-700">$12.00</span>
+          <li class="flex items-start justify-between bg-gray-50 rounded-xl p-3">
+            <div class="flex items-start gap-3">
+              <img src="https://images.unsplash.com/photo-1540420773427-1a9ab1e1f6a9?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=7b2d8f9e4b3c2a1a3c9ef2b9e1b2c3d4" alt="Mezze Platter" class="w-16 h-16 rounded-lg object-cover">
+              <div>
+                <h3 class="text-sm font-medium">Market Mezze Platter</h3>
+                <p class="text-xs text-gray-500 mt-1">Hummus, olives, flatbread</p>
               </div>
-              <p class="text-xs text-gray-500">San Marzano tomato, mozzarella, basil.</p>
-              <div class="mt-3 flex items-center gap-2">
-                <button data-id="pizza" class="add-btn px-3 py-1 bg-white border border-gray-200 rounded-md text-sm hover:bg-gray-50">Add</button>
-                <button data-id="pizza" class="quick-note text-xs text-gray-500 hover:underline">Notes</button>
-              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-semibold">$14</div>
+              <button class="mt-3 add-btn inline-flex items-center px-3 py-1 bg-amber-50 text-amber-700 rounded-md text-xs" data-id="2" data-name="Market Mezze Platter" data-price="14">Add</button>
             </div>
           </li>
 
-          <li class="flex items-center gap-4">
-            <div class="w-20 h-14 rounded-md bg-gradient-to-br from-yellow-300 to-yellow-500 flex items-center justify-center text-white font-semibold">Bowl</div>
-            <div class="flex-1">
-              <div class="flex items-baseline justify-between">
-                <h4 class="text-sm font-semibold text-gray-800">Teriyaki Bowl</h4>
-                <span class="text-sm font-medium text-gray-700">$11.25</span>
+          <li class="flex items-start justify-between bg-gray-50 rounded-xl p-3">
+            <div class="flex items-start gap-3">
+              <img src="https://images.unsplash.com/photo-1604908176971-7d2f2c3c5a55?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=2f8b4a5d6e7c3f1b4a5d6c7e8b9a0c1d" alt="Roasted Veg" class="w-16 h-16 rounded-lg object-cover">
+              <div>
+                <h3 class="text-sm font-medium">Stone-Roasted Vegetables</h3>
+                <p class="text-xs text-gray-500 mt-1">Seasonal veg, tahini glaze</p>
               </div>
-              <p class="text-xs text-gray-500">Grilled chicken, rice, seasonal veggies, teriyaki glaze.</p>
-              <div class="mt-3 flex items-center gap-2">
-                <button data-id="bowl" class="add-btn px-3 py-1 bg-white border border-gray-200 rounded-md text-sm hover:bg-gray-50">Add</button>
-                <button data-id="bowl" class="quick-note text-xs text-gray-500 hover:underline">Notes</button>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-semibold">$12</div>
+              <button class="mt-3 add-btn inline-flex items-center px-3 py-1 bg-amber-50 text-amber-700 rounded-md text-xs" data-id="3" data-name="Stone-Roasted Vegetables" data-price="12">Add</button>
+            </div>
+          </li>
+
+          <li class="flex items-start justify-between bg-gray-50 rounded-xl p-3">
+            <div class="flex items-start gap-3">
+              <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=400&auto=format&fit=crop&ixlib=rb-4.0.3&s=3f1e7a8d2b6c4f5d7e8a9b0c1d2e3f4a" alt="Baklava" class="w-16 h-16 rounded-lg object-cover">
+              <div>
+                <h3 class="text-sm font-medium">Honey Pistachio Baklava</h3>
+                <p class="text-xs text-gray-500 mt-1">House-made, crisp layers</p>
               </div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-semibold">$8</div>
+              <button class="mt-3 add-btn inline-flex items-center px-3 py-1 bg-amber-50 text-amber-700 rounded-md text-xs" data-id="4" data-name="Honey Pistachio Baklava" data-price="8">Add</button>
             </div>
           </li>
         </ul>
 
-        <div class="mt-4 text-xs text-gray-500">Tip: Click "Add" to populate the cart. Use the cart icon to review and checkout.</div>
-      </div>
-    </div>
-
-    <!-- Cart Drawer (kept inside the single section) -->
-    <div id="cart-drawer" class="fixed inset-0 flex items-end md:items-center justify-center pointer-events-none">
-      <div id="cart-backdrop" class="absolute inset-0 bg-black/40 opacity-0 transition-opacity pointer-events-none"></div>
-      <aside class="relative z-30 transform translate-y-full md:translate-y-0 md:scale-95 opacity-0 transition-all pointer-events-none w-full max-w-lg mx-4">
-        <div class="bg-white rounded-t-2xl md:rounded-2xl shadow-xl overflow-hidden">
-          <div class="flex items-center justify-between px-6 py-4 border-b">
-            <h4 class="text-lg font-semibold">Your Order</h4>
-            <div class="flex items-center gap-2">
-              <button id="close-cart" class="text-sm px-3 py-1 rounded-md hover:bg-gray-50">Close</button>
-            </div>
+        <!-- Order Summary -->
+        <div id="orderSummary" class="mt-6 bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-semibold">Your Order</h3>
+            <button id="clearCartBtn" class="text-xs text-gray-400 hover:text-gray-600">Clear</button>
           </div>
-
-          <div class="p-6">
-            <div id="cart-items" class="space-y-4">
-              <p class="text-sm text-gray-500">Your cart is empty. Add items from the menu to begin.</p>
-            </div>
-
-            <div id="cart-summary" class="mt-6 border-t pt-4 hidden">
-              <div class="flex items-center justify-between text-sm text-gray-700">
-                <span>Subtotal</span>
-                <span id="subtotal">$0.00</span>
-              </div>
-              <div class="flex items-center justify-between text-sm text-gray-700 mt-2">
-                <span>Delivery</span>
-                <span id="delivery-fee">$3.00</span>
-              </div>
-              <div class="flex items-center justify-between text-base font-semibold text-gray-900 mt-3">
-                <span>Total</span>
-                <span id="total">$0.00</span>
-              </div>
-
-              <form id="checkout-form" class="mt-4 space-y-3">
-                <input id="customer-name" class="w-full px-3 py-2 border rounded-md text-sm" placeholder="Name" required />
-                <input id="customer-phone" class="w-full px-3 py-2 border rounded-md text-sm" placeholder="Phone" required />
-                <input id="customer-address" class="w-full px-3 py-2 border rounded-md text-sm" placeholder="Delivery address" required />
-                <button type="submit" class="w-full px-4 py-2 bg-amber-500 text-white rounded-md">Place Order</button>
-              </form>
-            </div>
-
-            <div id="order-confirm" class="hidden mt-6 bg-green-50 border border-green-100 p-4 rounded-md text-sm text-green-800">
-              Thank you! Your order has been placed. We'll notify you with delivery updates.
+          <div id="cartItems" class="mt-3 text-sm text-gray-600">
+            <p class="text-xs text-gray-400">No items yet — add something delicious.</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <div class="text-sm text-gray-600">Estimated total</div>
+            <div id="cartTotal" class="text-lg font-semibold text-gray-900">$0.00</div>
+          </div>
+          <div class="mt-4">
+            <div class="flex gap-3">
+              <button id="checkoutBtn" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg text-sm disabled:opacity-60" disabled>
+                Checkout
+              </button>
+              <button id="pickupBtn" class="px-4 py-2 text-sm border border-amber-600 text-amber-600 rounded-lg">Pickup</button>
             </div>
           </div>
         </div>
-      </aside>
+
+        <!-- Small note -->
+        <p class="mt-4 text-xs text-gray-400">Secure payments • Cancellations allowed up to 10 minutes after ordering • Allergens available at checkout</p>
+      </div>
     </div>
-  </section>
 
-  <script>
-    // Menu data
-    const menu = [
-      { id: 'salad', name: 'Harvest Kale Salad', price: 9.5, desc: 'Kale, roasted pumpkin, feta, lemon vinaigrette.' },
-      { id: 'pizza', name: 'Margherita Pizza', price: 12.0, desc: 'San Marzano tomato, mozzarella, basil.' },
-      { id: 'bowl', name: 'Teriyaki Bowl', price: 11.25, desc: 'Grilled chicken, rice, seasonal veggies, teriyaki glaze.' }
-    ];
+    <!-- Checkout Drawer / Modal (inside the single section) -->
+    <div id="checkoutDrawer" class="fixed inset-0 flex items-end md:items-center justify-center p-6 pointer-events-none">
+      <div id="drawerBackdrop" class="absolute inset-0 bg-black/30 opacity-0 transition-opacity pointer-events-none"></div>
+      <div class="relative w-full max-w-lg pointer-events-auto translate-y-6 md:translate-y-0 opacity-0 transform transition-all rounded-xl overflow-hidden bg-white ring-1 ring-gray-100 shadow-2xl" style="max-height:80vh;">
+        <div class="p-5">
+          <div class="flex items-start justify-between">
+            <div>
+              <h3 class="text-lg font-semibold">Checkout</h3>
+              <p class="text-sm text-gray-500 mt-1">Review your order and enter delivery details</p>
+            </div>
+            <button id="closeDrawer" class="text-gray-400 hover:text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6.28 5.22a.75.75 0 011.06 0L10 7.88l2.66-2.66a.75.75 0 111.06 1.06L11.06 8.94l2.66 2.66a.75.75 0 11-1.06 1.06L10 10l-2.66 2.66a.75.75 0 11-1.06-1.06L8.94 8.94 6.28 6.28a.75.75 0 010-1.06z" clip-rule="evenodd"/></svg>
+            </button>
+          </div>
 
-    // Elements
-    const addButtons = Array.from(document.getElementsByClassName('add-btn'));
-    const cartToggle = document.getElementById('cart-toggle');
-    const cartDrawer = document.getElementById('cart-drawer');
-    const cartBackdrop = document.getElementById('cart-backdrop');
-    const closeCart = document.getElementById('close-cart');
-    const cartCountEl = document.getElementById('cart-count');
-    const cartItemsEl = document.getElementById('cart-items');
-    const cartSummary = document.getElementById('cart-summary');
-    const subtotalEl = document.getElementById('subtotal');
-    const totalEl = document.getElementById('total');
-    const deliveryFeeEl = document.getElementById('delivery-fee');
-    const checkoutForm = document.getElementById('checkout-form');
-    const orderConfirm = document.getElementById('order-confirm');
-    const ctaOrder = document.getElementById('cta-order');
-    const viewMenuBtn = document.getElementById('view-menu');
+          <div id="drawerContent" class="mt-4 space-y-4">
+            <div id="drawerItems" class="space-y-3 text-sm text-gray-700">
+              <!-- cart lines injected here -->
+            </div>
 
-    // Cart state
-    const state = {
-      items: {}, // id -> {quantity, item}
-      deliveryFee: 3.00
-    };
+            <div class="pt-3 border-t border-gray-100">
+              <label class="block text-xs text-gray-500">Delivery address</label>
+              <input id="addressInput" type="text" placeholder="123 Main St, Apt 4" class="mt-2 w-full rounded-md border-gray-200 shadow-sm text-sm p-2" />
+            </div>
 
-    function updateCartUI() {
-      const items = Object.values(state.items);
-      const count = items.reduce((s, it) => s + it.quantity, 0);
-      cartCountEl.textContent = count;
+            <div class="grid grid-cols-2 gap-3">
+              <input id="nameInput" type="text" placeholder="Full name" class="mt-2 w-full rounded-md border-gray-200 shadow-sm text-sm p-2" />
+              <input id="phoneInput" type="tel" placeholder="Phone" class="mt-2 w-full rounded-md border-gray-200 shadow-sm text-sm p-2" />
+            </div>
 
-      if (items.length === 0) {
-        cartItemsEl.innerHTML = '<p class="text-sm text-gray-500">Your cart is empty. Add items from the menu to begin.</p>';
-        cartSummary.classList.add('hidden');
-      } else {
-        cartItemsEl.innerHTML = '';
-        items.forEach(({ item, quantity }) => {
-          const row = document.createElement('div');
-          row.className = 'flex items-center justify-between';
-          row.innerHTML = `
-            <div class="flex-1">
-              <div class="flex items-baseline justify-between gap-2">
-                <div>
-                  <div class="text-sm font-medium text-gray-800">${item.name}</div>
-                  <div class="text-xs text-gray-500">${item.desc}</div>
-                </div>
-                <div class="text-sm text-gray-700">$${(item.price * quantity).toFixed(2)}</div>
-              </div>
-              <div class="mt-2 flex items-center gap-2 text-sm">
-                <button data-id="${item.id}" class="decrease px-2 py-1 border rounded">-</button>
-                <span class="px-2">${quantity}</span>
-                <button data-id="${item.id}" class="increase px-2 py-1 border rounded">+</button>
-                <button data-id="${item.id}" class="remove text-red-500 ml-3">Remove</button>
+            <div class="flex items-center justify-between">
+              <div class="text-sm text-gray-600">Tip</div>
+              <div class="flex items-center gap-2">
+                <select id="tipSelect" class="rounded-md border-gray-200 text-sm p-2">
+                  <option value="0">No tip</option>
+                  <option value="2">+$2</option>
+                  <option value="4">+$4</option>
+                  <option value="6">+$6</option>
+                </select>
               </div>
             </div>
-          `;
-          cartItemsEl.appendChild(row);
-        });
 
-        cartSummary.classList.remove('hidden');
-        const subtotal = items.reduce((s, it) => s + it.quantity * it.item.price, 0);
-        subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
-        const total = subtotal + state.deliveryFee;
-        totalEl.textContent = `$${total.toFixed(2)}`;
+            <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+              <div class="text-sm text-gray-600">Total</div>
+              <div id="drawerTotal" class="text-lg font-semibold text-gray-900">$0.00</div>
+            </div>
 
-        // attach buttons
-        Array.from(cartItemsEl.getElementsByClassName('increase')).forEach(btn => {
-          btn.onclick = () => {
-            const id = btn.dataset.id;
-            state.items[id].quantity++;
-            updateCartUI();
-          };
-        });
-        Array.from(cartItemsEl.getElementsByClassName('decrease')).forEach(btn => {
-          btn.onclick = () => {
-            const id = btn.dataset.id;
-            if (state.items[id].quantity > 1) state.items[id].quantity--;
-            else delete state.items[id];
-            updateCartUI();
-          };
-        });
-        Array.from(cartItemsEl.getElementsByClassName('remove')).forEach(btn => {
-          btn.onclick = () => {
-            const id = btn.dataset.id;
-            delete state.items[id];
-            updateCartUI();
-          };
-        });
+            <div>
+              <button id="placeOrderBtn" class="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 bg-amber-600 text-white rounded-lg text-sm">
+                Place Order
+              </button>
+            </div>
+
+            <p id="orderSuccess" class="hidden mt-3 text-sm text-green-600">Thank you — your order is being prepared!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Data & state
+      const menu = [
+        { id: "1", name: "Charred Lamb Skewers", price: 18 },
+        { id: "2", name: "Market Mezze Platter", price: 14 },
+        { id: "3", name: "Stone-Roasted Vegetables", price: 12 },
+        { id: "4", name: "Honey Pistachio Baklava", price: 8 }
+      ];
+      const cart = {};
+
+      // Elements
+      const addBtns = document.querySelectorAll('.add-btn');
+      const cartItemsEl = document.getElementById('cartItems');
+      const cartTotalEl = document.getElementById('cartTotal');
+      const checkoutBtn = document.getElementById('checkoutBtn');
+      const orderNowBtn = document.getElementById('orderNowBtn');
+      const checkoutDrawer = document.getElementById('checkoutDrawer');
+      const drawerBackdrop = document.getElementById('drawerBackdrop');
+      const drawerContent = document.getElementById('drawerContent');
+      const drawerItems = document.getElementById('drawerItems');
+      const drawerTotal = document.getElementById('drawerTotal');
+      const placeOrderBtn = document.getElementById('placeOrderBtn');
+      const orderSuccess = document.getElementById('orderSuccess');
+      const closeDrawer = document.getElementById('closeDrawer');
+      const clearCartBtn = document.getElementById('clearCartBtn');
+      const pickupBtn = document.getElementById('pickupBtn');
+      const tipSelect = document.getElementById('tipSelect');
+
+      // Helpers
+      function formatMoney(n){ return '$' + n.toFixed(2); }
+      function updateCartUI(){
+        const items = Object.values(cart);
+        if(items.length === 0){
+          cartItemsEl.innerHTML = '<p class="text-xs text-gray-400">No items yet — add something delicious.</p>';
+          checkoutBtn.disabled = true;
+        } else {
+          cartItemsEl.innerHTML = items.map(it => {
+            return `<div class="flex items-center justify-between text-sm">
+                      <div>
+                        <div class="font-medium">${escapeHtml(it.name)}</div>
+                        <div class="text-xs text-gray-500">Qty: ${it.qty}</div>
+                      </div>
+                      <div class="text-right">
+                        <div class="font-medium">${formatMoney(it.qty * it.price)}</div>
+                        <div class="mt-1 flex gap-1 justify-end">
+                          <button data-id="${it.id}" class="dec text-xs px-2 py-1 rounded bg-gray-100">-</button>
+                          <button data-id="${it.id}" class="inc text-xs px-2 py-1 rounded bg-gray-100">+</button>
+                        </div>
+                      </div>
+                    </div>`;
+          }).join('<hr class="my-2 border-dashed">');
+          checkoutBtn.disabled = false;
+        }
+        const total = items.reduce((s,i)=>s + i.price * i.qty, 0);
+        cartTotalEl.textContent = formatMoney(total);
       }
-    }
 
-    // Add to cart handlers
-    addButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = btn.dataset.id;
-        const item = menu.find(m => m.id === id);
-        if (!item) return;
-        if (!state.items[id]) state.items[id] = { item, quantity: 0 };
-        state.items[id].quantity++;
-        updateCartUI();
-        openCart();
+      function updateDrawer(){
+        const items = Object.values(cart);
+        if(items.length === 0){
+          drawerItems.innerHTML = '<p class="text-xs text-gray-400">No items selected.</p>';
+        } else {
+          drawerItems.innerHTML = items.map(it=>{
+            return `<div class="flex items-center justify-between text-sm">
+                      <div>
+                        <div class="font-medium">${escapeHtml(it.name)}</div>
+                        <div class="text-xs text-gray-500">Qty: ${it.qty} • ${escapeHtml(it.custom || '')}</div>
+                      </div>
+                      <div class="text-right">${formatMoney(it.qty * it.price)}</div>
+                    </div>`;
+          }).join('');
+        }
+        const subtotal = items.reduce((s,i)=>s + i.price * i.qty, 0);
+        const tip = Number(tipSelect.value || 0);
+        drawerTotal.textContent = formatMoney(subtotal + tip);
+      }
+
+      // Basic XSS escape for injected text
+      function escapeHtml(text){
+        return String(text).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])});
+      }
+
+      // Add button events
+      addBtns.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const id = btn.dataset.id;
+          const name = btn.dataset.name;
+          const price = Number(btn.dataset.price);
+          if(cart[id]){
+            cart[id].qty += 1;
+          } else {
+            cart[id] = { id, name, price, qty: 1 };
+          }
+          updateCartUI();
+        });
       });
-    });
 
-    // Open / Close cart
-    function openCart() {
-      cartDrawer.classList.remove('pointer-events-none');
-      cartBackdrop.classList.remove('pointer-events-none');
-      setTimeout(() => {
-        cartBackdrop.classList.add('opacity-100');
-        cartDrawer.querySelector('aside').classList.remove('translate-y-full', 'opacity-0', 'scale-95');
-        cartDrawer.querySelector('aside').classList.add('translate-y-0', 'opacity-100', 'scale-100');
-        cartDrawer.querySelector('aside').classList.remove('pointer-events-none');
-      }, 10);
-    }
-    function closeCartFn() {
-      cartBackdrop.classList.remove('opacity-100');
-      cartDrawer.querySelector('aside').classList.remove('translate-y-0', 'opacity-100', 'scale-100');
-      cartDrawer.querySelector('aside').classList.add('translate-y-full', 'opacity-0', 'scale-95');
-      setTimeout(() => {
-        cartDrawer.classList.add('pointer-events-none');
-        cartBackdrop.classList.add('pointer-events-none');
-      }, 300);
-    }
+      // Increment / decrement in order summary (delegation)
+      cartItemsEl.addEventListener('click', (e)=>{
+        if(e.target.classList.contains('inc') || e.target.classList.contains('dec')){
+          const id = e.target.dataset.id;
+          if(!cart[id]) return;
+          if(e.target.classList.contains('inc')) cart[id].qty += 1;
+          else {
+            cart[id].qty = Math.max(0, cart[id].qty - 1);
+            if(cart[id].qty === 0) delete cart[id];
+          }
+          updateCartUI();
+        }
+      });
 
-    cartToggle.addEventListener('click', () => {
-      openCart();
-    });
-    closeCart.addEventListener('click', closeCartFn);
-    cartBackdrop.addEventListener('click', closeCartFn);
+      // Clear cart
+      clearCartBtn.addEventListener('click', ()=>{
+        for(const k in cart) delete cart[k];
+        updateCartUI();
+      });
 
-    // Checkout
-    checkoutForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      // Simple validation
-      const name = document.getElementById('customer-name').value.trim();
-      const phone = document.getElementById('customer-phone').value.trim();
-      const address = document.getElementById('customer-address').value.trim();
-      if (!name || !phone || !address) return alert('Please fill in all delivery fields.');
+      // Order flow
+      function openDrawer(){
+        updateDrawer();
+        // animate in
+        checkoutDrawer.style.display = 'flex';
+        setTimeout(()=> {
+          drawerBackdrop.classList.remove('pointer-events-none');
+          drawerBackdrop.classList.add('opacity-100');
+          const panel = checkoutDrawer.querySelector('[role="dialog"], .relative') || checkoutDrawer.querySelector('.relative');
+          if(panel){
+            panel.style.opacity = '1';
+            panel.style.transform = 'translateY(0)';
+          }
+        }, 10);
+      }
+      function closeDrawerFn(){
+        drawerBackdrop.classList.add('pointer-events-none');
+        drawerBackdrop.classList.remove('opacity-100');
+        const panel = checkoutDrawer.querySelector('[role="dialog"], .relative') || checkoutDrawer.querySelector('.relative');
+        if(panel){
+          panel.style.opacity = '0';
+          panel.style.transform = 'translateY(12px)';
+        }
+        setTimeout(()=> checkoutDrawer.style.display = 'none', 180);
+        orderSuccess.classList.add('hidden');
+      }
 
-      // Simulate placing order
-      cartItemsEl.innerHTML = '';
-      cartSummary.classList.add('hidden');
-      orderConfirm.classList.remove('hidden');
+      // Attach simple handlers
+      orderNowBtn.addEventListener('click', ()=>{
+        // if cart empty, prefill with a chef suggestion
+        if(Object.keys(cart).length === 0){
+          cart['2'] = { id: '2', name: 'Market Mezze Platter', price: 14, qty: 1 };
+          updateCartUI();
+        }
+        openDrawer();
+      });
+      checkoutBtn.addEventListener('click', openDrawer);
+      closeDrawer.addEventListener('click', closeDrawerFn);
+      drawerBackdrop.addEventListener('click', closeDrawerFn);
 
-      // Reset cart
-      state.items = {};
-      cartCountEl.textContent = '0';
+      // Place order simulated
+      placeOrderBtn.addEventListener('click', ()=>{
+        const name = document.getElementById('nameInput').value.trim();
+        const address = document.getElementById('addressInput').value.trim();
+        const phone = document.getElementById('phoneInput').value.trim();
+        if(Object.keys(cart).length === 0) return alert('Your cart is empty.');
+        if(!name || !phone || !address) {
+          return alert('Please enter your name, phone, and address to place an order.');
+        }
+        placeOrderBtn.disabled = true;
+        placeOrderBtn.textContent = 'Placing order...';
+        setTimeout(()=>{
+          placeOrderBtn.disabled = false;
+          placeOrderBtn.textContent = 'Place Order';
+          orderSuccess.classList.remove('hidden');
+          // "clear" cart after order
+          for(const k in cart) delete cart[k];
+          updateCartUI();
+          updateDrawer();
+        }, 1200);
+      });
 
-      setTimeout(() => {
-        orderConfirm.textContent = 'Order received! A confirmation text will be sent shortly.';
-      }, 700);
+      // Tip change updates drawer total
+      tipSelect.addEventListener('change', updateDrawer);
 
-      // Auto-close after short time
-      setTimeout(() => {
-        closeCartFn();
-        orderConfirm.classList.add('hidden');
-        checkoutForm.reset();
-      }, 3000);
-    });
+      // Pickup button: open drawer prefilled for pickup note
+      pickupBtn.addEventListener('click', ()=>{
+        updateDrawer();
+        document.getElementById('addressInput').placeholder = 'Pickup at restaurant — leave blank';
+        openDrawer();
+      });
 
-    // CTA binds
-    ctaOrder.addEventListener('click', () => {
-      // scroll not necessary; just open cart or highlight menu
-      document.querySelector('#menu-list').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
-    viewMenuBtn.addEventListener('click', () => {
-      document.querySelector('#menu-list').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
-
-    // Initialize UI
-    deliveryFeeEl.textContent = `$${state.deliveryFee.toFixed(2)}`;
-    updateCartUI();
-  </script>
+      // Initialize state
+      updateCartUI();
+      // Hide drawer initially
+      checkoutDrawer.style.display = 'none';
+      drawerBackdrop.classList.add('opacity-0');
+      drawerBackdrop.classList.add('pointer-events-none');
+    </script>
+  </section>
 </body>
 </html>
